@@ -32,7 +32,7 @@ export class UserController {
       return this.userService.getAll();
     }
   }
-  @Get('sort')
+  @Get('getalluser')
   async getAllAccounts(@Query() params: any): Promise<any> {
     if (!params.page) {
       params.page = 1;
