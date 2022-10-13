@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Query,
@@ -19,8 +21,13 @@ export class UserController {
 
   @Post('invite')
   async create(@Body() params: UserDto): Promise<any> {
-    return await this.userService.create(params);
+    try {
+      return await this.userService.create(params);
+    } catch {
+      throw new HttpException('Email already exists', HttpStatus.BAD_REQUEST);
+    }
   }
+
   @Get('/')
   async findAll(
     @Query()

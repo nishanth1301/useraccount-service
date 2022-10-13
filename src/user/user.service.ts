@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import aqp from 'api-query-params';
 import { Model } from 'mongoose';
 import { Account } from 'src/account/account.schema';
+import { encodePassword } from 'src/utilis/pafinationParams';
 import { InvitationDto } from './dtos/invite.dto';
 import { UserFilterDto } from './dtos/user-filter.dto';
 import { UserDto } from './dtos/user.dto';
@@ -12,6 +13,8 @@ import { User, UserDocument } from './user.schema';
 export class UserService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
   async create(params: UserDto) {
+    const password = await encodePassword(params.password);
+    params.password = password;
     return await this.userModel.create(params);
   }
   async addAccount(id: string, account: Account) {
@@ -41,6 +44,8 @@ export class UserService {
       const accounts = await this.userModel
         .find({ name: { $regex: filter.search } })
         .limit(limit)
+        .populate('account')
+
         .skip((page - 1 || 0) * limit)
         .sort(<any>sort);
 
@@ -61,6 +66,7 @@ export class UserService {
       const accounts = await this.userModel
         .find(filter)
         .limit(limit)
+        .populate('account')
         .sort(<any>sort)
         .skip((page - 1 || 0) * limit);
       const total_count: number = await this.userModel.find(filter).count();

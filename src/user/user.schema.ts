@@ -29,6 +29,8 @@ export class User {
 
   @Prop({ type: Types.ObjectId, ref: 'Account' })
   account: string;
+ 
+  members: User[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

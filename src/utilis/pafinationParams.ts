@@ -1,5 +1,10 @@
+import * as bcrypt from 'bcrypt';
+export async function encodePassword(rawPassword: string): Promise<string> {
+  const SALT = bcrypt.genSaltSync();
+  return await bcrypt.hash(rawPassword, SALT);
+}
 export const QUERY_PARAMS = (params: object) => {
-    console.info(params)
+  console.info(params);
   const SORT = params['sort'] || '-createdAt';
   const LIMIT = params['limit'] || 5;
   const paramkeys = Object.keys(params);

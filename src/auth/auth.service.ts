@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AccountService } from 'src/account/account.service';
@@ -30,8 +30,8 @@ export class AuthService {
       }
 
       return { success: true, user: userinfo };
-    } catch (error) {
-      console.info(error);
+    } catch (e) {
+      throw new HttpException(e.message, 400);
     }
   }
 }
